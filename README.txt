@@ -1,6 +1,8 @@
-OpenOPC for Python 1.2.0
+OpenOPC for Python 3.x
+
 Copyright (c) 2008-2012 by Barry Barnreiter (barry_b@users.sourceforge.net)
 Copyright (c) 2014 by Anton D. Kachalov (mouse@yandex.ru)
+Copyright (c) 2017 by Michal Kwiatkowski (michal@trivas.pl)
 
 http://openopc.sourceforge.net/
 https://github.com/ya-mouse/openopc
