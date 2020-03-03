@@ -11,5 +11,5 @@ setup(
     package_dir={'':'src'},
     py_modules=['OpenOPC'],
     url='https://github.com/mkwiatkowski/openopc',
-    version="1.2.2",
+    version="1.3.1",
 )
