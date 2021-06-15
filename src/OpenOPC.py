@@ -15,10 +15,11 @@ import types
 import string
 import socket
 import re
-import Pyro4.core
+import Pyro5.core
+import Pyro5.server
 from multiprocessing import Queue
 
-__version__ = '1.2.0'
+__version__ = '1.4.0'
 
 current_client = None
 
@@ -119,15 +120,15 @@ def exceptional(func, alt_return=None, alt_exceptions=(Exception,), final=None, 
 def get_sessions(host='localhost', port=7766):
    """Return sessions in OpenOPC Gateway Service as GUID:host hash"""
    
-   import Pyro4.core
-   server_obj = Pyro4.Proxy("PYRO:opc@{0}:{1}".format(host, port))
+   import Pyro5.client
+   server_obj = Pyro5.client.Proxy("PYRO:opc@{0}:{1}".format(host, port))
    return server_obj.get_clients()
 
 def open_client(host='localhost', port=7766):
    """Connect to the specified OpenOPC Gateway Service"""
    
-   import Pyro4.core
-   server_obj = Pyro4.Proxy("PYRO:opc@{0}:{1}".format(host, port))
+   import Pyro5.client
+   server_obj = Pyro5.client.Proxy("PYRO:opc@{0}:{1}".format(host, port))
    return server_obj.create_client()
 
 class TimeoutError(Exception):
@@ -145,7 +146,7 @@ class GroupEvents:
    def OnDataChange(self, TransactionID, NumItems, ClientHandles, ItemValues, Qualities, TimeStamps):
       self.client.callback_queue.put((TransactionID, ClientHandles, ItemValues, Qualities, TimeStamps))
 
-@Pyro4.expose    # needed for 4.55
+@Pyro5.server.expose    # needed for 5.12
 class client():
    def __init__(self, opc_class=None, client_name=None):
       """Instantiate OPC automation class"""
