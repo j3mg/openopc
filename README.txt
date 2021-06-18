@@ -1,7 +1,7 @@
 OpenOPC
 =======
 
-OpenOPC for Python 3.x is a descendent of http://openopc.sourceforge.net
+OpenOPC for Python 3.6+ is a descendent of http://openopc.sourceforge.net
 with modifications for Python 3 and distutils.
 
 
@@ -19,14 +19,14 @@ installation process, then you'll need to also download and install
 the following packages in order to develop your own Python programs
 which use the OpenOPC library:
 
-1. Python 3.4+
+1. Python 3.6+
    http://www.python.org/download/
 
 2. Python for Windows Extensions (pywin32)
    http://sourceforge.net/projects/pywin32/
 
-3. Pyro4
-   https://github.com/irmen/Pyro4
+3. Pyro5
+   https://github.com/irmen/Pyro5
 
 Of course, Python is necessary on all platforms.  However the other
 packages may be optional depending on your configuration:
@@ -34,17 +34,17 @@ packages may be optional depending on your configuration:
 1. Win32 platform, using the OpenOPC Gateway Service
 
 Pywin32:  optional
-Pyro4:    required
+Pyro5:    required
 
 2. Win32 platform, talking to OPC Servers directly using COM/DCOM
 
 Pywin32:  required
-Pyro4:    optional
+Pyro5:    optional
 
 3. Non-Windows platform (use of Gateway Service is mandatory)
 
 Pywin32:  not applicable
-Pyro4:    required
+Pyro5:    required
 
 In order to get the most from the OpenOPC package, Windows developers
 are encouraged to install both Pywin32 and Pyro.  Using Pyro to talk to
@@ -201,7 +201,9 @@ Credits
 Copyright (c) 2008-2012 by Barry Barnreiter (barry_b@users.sourceforge.net)
 Copyright (c) 2014 by Anton D. Kachalov (mouse@yandex.ru)
 Copyright (c) 2017 by Michal Kwiatkowski (michal@trivas.pl)
+Copyright (c) 2021 by j3mg
 
 http://openopc.sourceforge.net/
 https://github.com/ya-mouse/openopc
 https://github.com/sightmachine/OpenOPC
+https://github.com/mkwiatkowski/OpenOPC
