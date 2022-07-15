@@ -38,7 +38,7 @@ class CPU:
         return value
 
 def _disk_info():
-    drive = unicode(os.getenv("SystemDrive"))
+    drive = os.getenv("SystemDrive")
     freeuser = ctypes.c_int64()
     total = ctypes.c_int64()
     free = ctypes.c_int64()
@@ -136,12 +136,12 @@ def _task_list():
 def task_mem(image_name):
     image_name = str.lower(image_name)
     if image_name[-4:] != '.exe': image_name = image_name + '.exe'
-    return sum([mem for pid,name,mem in _task_list() if str.lower(name) == image_name])
+    return sum([mem for pid,name,mem in _task_list() if str.lower(str(name)) == image_name])
 
 def task_exists(image_name):
     image_name = str.lower(image_name)
     if image_name[-4:] != '.exe': image_name = image_name + '.exe'
-    return len([mem for pid,name,mem in _task_list() if str.lower(name) == image_name]) > 0
+    return len([mem for pid,name,mem in _task_list() if str.lower(str(name)) == image_name]) > 0
 
 def task_cpu(image_name):
     if not wmi_found: return 0.0
