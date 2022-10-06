@@ -1,0 +1,15 @@
+attrs==22.1.0
+colorama==0.4.5
+coverage==6.4.3
+iniconfig==1.1.1
+packaging
+pluggy==1.0.0
+pygount==1.2.4
+pygments==2.12.0
+pyparsing==3.0.9
+pytest==7.1.2
+pytest-mock==3.8.2
+pyro5>5.13
+serpent>=1.40
+pywin32
+tomli==2.0.1
