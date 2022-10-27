@@ -39,7 +39,7 @@ def test_release_client(mock_opc, mock_pyro_client, mock_pyro_daemon):
     server.release_client(serverclient)
     
 def test_service(mock_win32_service):
-    service = OpenOPCService.OpcService('dummy')
+    service = OpenOPCService.opcservice.OpcService('dummy')
     service.SvcDoRun()
     service.SvcStop()
     assert(True)

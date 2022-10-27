@@ -1,8 +1,8 @@
 ###########################################################################
 #
-# OpenOPC for Python OPC-DA Library Module
+# OpenOPC for Python OPC-DA Library File
 #
-# A Windows only OPC-DA library module.
+# A Windows only OPC-DA library file.
 #
 # Copyright (c) 2007-2012 Barry Barnreiter (barry_b@users.sourceforge.net)
 # Copyright (c) 2014 Anton D. Kachalov (mouse@yandex.ru)
@@ -11,12 +11,20 @@
 #
 ###########################################################################
 import os
+import sys
+import time
+import types
+import string
+import socket
+import re
+import Pyro5.core
+import Pyro5.server
 
-def win32_check(): # can be mocked by pytest-mock
-    return (os.name == 'nt')
+# OPC Constants
+from OpenOPC.common import get_error_str, OPC_CLASS, OPC_SERVER, OPC_CLIENT, OPCError
 
 win32com_found = False
-win32_found = win32_check()
+win32_found = (os.name == 'nt')
 
 # Win32 only modules not needed for 'open' protocol mode
 if win32_found:
@@ -26,7 +34,7 @@ if win32_found:
         import win32event
         import pythoncom
         import pywintypes
-        import SystemHealth
+        import OpenOPC.systemhealth
 
         # Win32 variant types
         pywintypes.datetime = pywintypes.TimeType
@@ -43,22 +51,10 @@ if win32_found:
     except ImportError:
         win32com_found = False
     else:
-        from OpenOPCDAIO import ClientIO
-        from OpenOPCDATools import ClientTools
+        from OpenOPC.opcdaio import ClientIO
+        from OpenOPC.opcdatools import ClientTools
         
         win32com_found = True
-
-import sys
-import time
-import types
-import string
-import socket
-import re
-import Pyro5.core
-import Pyro5.server
-
-# OPC Constants
-from Common import OPC_CLASS, OPC_SERVER, OPC_CLIENT, OPCError, get_error_str
 
 @Pyro5.server.expose    # needed for 5.12
 class client():
@@ -82,6 +78,7 @@ class client():
         self.__open_guid__ = None
 
         self.trace = None
+
         def win32_init(opc_class):
             pythoncom.CoInitialize()
 
@@ -107,7 +104,7 @@ class client():
             self.clientIO = ClientIO()
             self.clientTools = ClientTools(self.opc_class, self.opc_host)
 
-        self.win32os = win32com_found and win32_check()
+        self.win32os = win32com_found # win32com_found set to False by pytest-mock in test_client
         if self.win32os: win32_init(opc_class)
 
     def set_gateway_settings(self, service, instance, host, port, guid):
@@ -152,7 +149,7 @@ class client():
                         self._opc.Connect(s, opc_host)
                     except pythoncom.com_error as err:
                         if len(opc_server_list) == 1:
-                            error_msg = 'Connect: %s' % self._get_error_str(err)
+                            error_msg = 'Connect: %s' % get_error_str(err)
                             raise OPCError(error_msg)
                     else:
                         # Set client name since some OPC servers use it for security
@@ -327,4 +324,3 @@ class client():
             return self.clientTools._update_tx_time()
         else:
             return False
-

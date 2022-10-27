@@ -112,7 +112,7 @@ class OpcService(win32serviceutil.ServiceFramework):
 
         daemon.shutdown()
 
-if __name__ == '__main__':
+def main():
     if len(sys.argv) == 1:
         try:
             evtsrc_dll = os.path.abspath(servicemanager.__file__)
@@ -138,3 +138,6 @@ if __name__ == '__main__':
             daemon.shutdown()
         else:
             win32serviceutil.HandleCommandLine(OpcService)
+
+if __name__ == '__main__':
+    main()

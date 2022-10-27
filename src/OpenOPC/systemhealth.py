@@ -1,3 +1,15 @@
+###########################################################################
+#
+# OpenOPC for Python OPC-DA Library File
+#
+# A Windows only system metrics library file.
+#
+# Copyright (c) 2007-2012 Barry Barnreiter (barry_b@users.sourceforge.net)
+# Copyright (c) 2014 Anton D. Kachalov (mouse@yandex.ru)
+# Copyright (c) 2017 José A. Maita (jose.a.maita@gmail.com)
+# Copyright (c) 2022 j3mg
+#
+###########################################################################
 import win32com.client
 import win32process
 import win32pdh
@@ -8,8 +20,6 @@ import ctypes
 import time
 import os
 import math
-
-__version__ = '1.0.1'
 
 # NT4 does not have WMI by default
 try:

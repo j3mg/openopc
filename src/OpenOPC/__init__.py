@@ -9,13 +9,17 @@
 #
 ###########################################################################
 
+import os
 from Pyro5 import __version__ as _pyro_version_
 import Pyro5.core
 import Pyro5.server
-from Common import OPC_CLASS, OPC_CLIENT, OPC_SERVER, OPCError, TimeoutError # Required for the OpenOPC Gateway service
-from OpenOPCDA import client, win32com_found
+from OpenOPC.common import OPC_CLASS, OPC_CLIENT, OPC_SERVER, OPCError, TimeoutError # Required for the OpenOPC Gateway service
+from OpenOPC.opcda import client as client
 
 __version__ = '1.5.0'
+
+def win32_check(): # can be mocked by pytest-mock
+    return (os.name == 'nt')
 
 def parse_version(ver):
     return tuple(map(int, (ver.split(".")))) # Works with Pyro5 numeric version strings

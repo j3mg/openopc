@@ -8,10 +8,10 @@ import win32com.client
 import pythoncom
 import servicemanager
 import pytest
-import OpenOPCDA
+import OpenOPC
 import OpenOPCService
 import time
-import Common
+import OpenOPC.common
 
 __opcServer__ = None
 __opcClient__ = None
@@ -22,7 +22,7 @@ def pytest_configure():
 
 def pytest_runtest_setup(item: pytest.Item) -> None:
     if item.name == 'test_read':
-        pytest.opcClient = OpenOPCDA.client()
+        pytest.opcClient = OpenOPC.client()
         pytest.opcClient.connect('KEPware.KEPserverEx.V4')
         pytest.opcClient.__open_guid__ = "PYRO:obj_dda39746d43a4c8b960022e6fbfd3137@127.0.0.1:7766"
 
@@ -39,18 +39,18 @@ class mock_daemon():
 
 @pytest.fixture
 def mock_opc(monkeypatch):
-    class _mock_opc():
+    class _mock_opc(OpenOPCService.opc):
         def __init__(self):
             self._remote_hosts = {}
             self._init_times = {}
             self._tx_times = {}
             self._pyroDaemon = mock_daemon()
             
-    monkeypatch.setattr(OpenOPCService.opc, "__init__", _mock_opc.__init__)
-    
+    monkeypatch.setattr("OpenOPCService.opc", _mock_opc)
+
 @pytest.fixture
 def mock_pyro_client(monkeypatch):
-    class _mock_pyro(OpenOPCDA.client):
+    class _mock_pyro(OpenOPC.client):
         def __init__(self, uri):
             super().__init__()
             self.__open_serv__ = pytest.opcServer 

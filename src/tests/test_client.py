@@ -6,38 +6,38 @@ Requires:
         KEPware.KEPserverEx.V4 OPC simulator
         Matrikon.OPC.Automation dll registered
 """
+import os
 import pytest
 import OpenOPC
-from OpenOPCDA import win32_check
 import pythoncom
-from Common import OPCError
+from OpenOPC.common import OPCError
 
 def test_badclassconnect():
-    with pytest.raises( (pythoncom.com_error, OPCError) ) as exc_info:
+    with pytest.raises( (pythoncom.com_error, Exception) ) as exc_info:
         opc = OpenOPC.client(opc_class='badclass')
         connected = opc.connect()
     assert('Dispatch: Invalid class string' in str(exc_info.value))
 
 def test_badserverconnect():
-    with pytest.raises( (pythoncom.com_error, OPCError) ) as exc_info:
+    with pytest.raises( (pythoncom.com_error, Exception) ) as exc_info:
         opc = OpenOPC.client()
         connected = opc.connect(opc_server='dummy')
     assert('Connect: -2147467259' in str(exc_info.value))
 
 def test_noserverconnect():
-    with pytest.raises(OPCError) as exc_info:
+    with pytest.raises(BaseException) as exc_info:
         opc = OpenOPC.client()
         connected = opc.connect(opc_server="")
     assert('Connect: Cannot connect to any of the servers in the OPC_SERVER list' in str(exc_info.value))
 
 def test_noconnecttoserverinlist():
-    with pytest.raises(OPCError) as exc_info:
+    with pytest.raises(BaseException) as exc_info:
         opc = OpenOPC.client()
         connected = opc.connect(opc_server="opc.deltav.1;AIM.OPC.1;Yokogawa.ExaopcDAEXQ.1")
     assert('Connect: Cannot connect to any of the servers in the OPC_SERVER list' in str(exc_info.value))
 
 def test_nonwindowsos(mocker):
-    mocker.patch('OpenOPCDA.win32_check',  return_value=False)
+    mocker.patch.object(OpenOPC.opcda, 'win32com_found', False)
     opc = OpenOPC.client()
     connected = opc.connect()
     if connected:
@@ -45,111 +45,112 @@ def test_nonwindowsos(mocker):
     assert (connected == False)
 
 def test_nonwindowsiread(mocker):
-    mocker.patch('OpenOPCDA.win32_check',  return_value=False)
+    mocker.patch.object(OpenOPC.opcda, 'win32com_found', False)
     taglistkep = ['Channel_1.Device_1.Bool_1', 'Channel_1.Device_1.Tag_1', 'Channel_1.Device_1.Tag_2', 'Channel_1.Device_1.Tag_3']
     opc = OpenOPC.client()
     response = opc.iread(taglistkep)
     assert(response == None)
 
 def test_nonwindowsread(mocker):
-    mocker.patch('OpenOPCDA.win32_check',  return_value=False)
+    mocker.patch.object(OpenOPC.opcda, 'win32com_found', False)
     taglistkep = ['Channel_1.Device_1.Bool_1', 'Channel_1.Device_1.Tag_1', 'Channel_1.Device_1.Tag_2', 'Channel_1.Device_1.Tag_3']
     opc = OpenOPC.client()
     response = opc.read(taglistkep)
     assert(response == None)
 
 def test_nonwindowsremove(mocker):
-    mocker.patch('OpenOPCDA.win32_check',  return_value=False)
+    mocker.patch.object(OpenOPC.opcda, 'win32com_found', False)
     opc = OpenOPC.client()
     response = opc.remove(groups='Channel_1.Device_1')
     assert(response == None)
 
 def test_nonwindowswrite(mocker):
-    mocker.patch('OpenOPCDA.win32_check',  return_value=False)
+    mocker.patch.object(OpenOPC.opcda, 'win32com_found', False)
     tagPair = [('Channel_1.Device_1.Tag_1', 8), ('Channel_1.Device_1.Tag_2', 62), ('Channel_1.Device_1.Tag_3', 74)]
     opc = OpenOPC.client()
     response = opc.write(tagPair)
     assert(response == None)
 
 def test_nonwindowsiwrite(mocker):
-    mocker.patch('OpenOPCDA.win32_check',  return_value=False)
+    mocker.patch.object(OpenOPC.opcda, 'win32com_found', False)
     tagPair = [('Channel_1.Device_1.Tag_1', 8), ('Channel_1.Device_1.Tag_2', 62), ('Channel_1.Device_1.Tag_3', 74)]
     opc = OpenOPC.client()
     response = opc.iwrite(tagPair)
     assert(response == None)
 
 def test_nonwindowsproperties(mocker):
-    mocker.patch('OpenOPCDA.win32_check',  return_value=False)
+    mocker.patch.object(OpenOPC.opcda, 'win32com_found', False)
     taglistkep = ['Channel_1.Device_1.Bool_1', 'Channel_1.Device_1.Tag_1', 'Channel_1.Device_1.Tag_2', 'Channel_1.Device_1.Tag_3']
     opc = OpenOPC.client()
     response = opc.properties(taglistkep)
     assert(response == None)
 
 def test_nonwindowsiproperties(mocker):
-    mocker.patch('OpenOPCDA.win32_check',  return_value=False)
+    mocker.patch.object(OpenOPC.opcda, 'win32com_found', False)
     taglistkep = ['Channel_1.Device_1.Bool_1', 'Channel_1.Device_1.Tag_1', 'Channel_1.Device_1.Tag_2', 'Channel_1.Device_1.Tag_3']
     opc = OpenOPC.client()
     response = opc.iproperties(taglistkep)
     assert(response == None)
 
 def test_nonwindowsoslist(mocker):
-    mocker.patch('OpenOPCDA.win32_check',  return_value=False)
+    mocker.patch.object(OpenOPC.opcda, 'win32com_found', False)
     opc = OpenOPC.client()
     response = opc.list()
     assert(response == None)
     
 def test_nonwindowsosilist(mocker):
-    mocker.patch('OpenOPCDA.win32_check',  return_value=False)
+    mocker.patch.object(OpenOPC.opcda, 'win32com_found', False)
     opc = OpenOPC.client()
     response = opc.ilist()
     assert(response == None)
     
 def test_nonwindowsos_servers(mocker):
-    mocker.patch('OpenOPCDA.win32_check',  return_value=False)
+    mocker.patch.object(OpenOPC.opcda, 'win32com_found', False)
     opc = OpenOPC.client()
     response = opc.servers('127.0.0.1')
     assert(response == None)
 
 def test_nonwindowsos_getitem(mocker):
-    mocker.patch('OpenOPCDA.win32_check',  return_value=False)
+    mocker.patch.object(OpenOPC.opcda, 'win32com_found', False)
     tagkep = 'Channel_1.Device_1.Tag_1'
     opc = OpenOPC.client()
     response = opc.__getitem__(tagkep)
     assert(response == None)
     
 def test_nonwindowsos_setitem(mocker):
-    mocker.patch('OpenOPCDA.win32_check',  return_value=False)
+    mocker.patch.object(OpenOPC.opcda, 'win32com_found', False)
     tagkep = 'Channel_1.Device_1.Tag_1'
     opc = OpenOPC.client()
     response = opc.__setitem__(tagkep, 10)
     assert(response == None)
     
 def test_nonwindowsoshealth(mocker):
-    mocker.patch('OpenOPCDA.win32_check',  return_value=False)
+    mocker.patch.object(OpenOPC.opcda, 'win32com_found', False)
     healthtags = ['@MemFree', '@MemUsed', '@MemTotal', '@MemPercent', '@DiskFree', '@SineWave', '@SawWave']
     opc = OpenOPC.client()
     response = opc._read_health(healthtags)
     assert(response == None)
+    
 def test_nonwindowsos_info(mocker):
-    mocker.patch('OpenOPCDA.win32_check',  return_value=False)
+    mocker.patch.object(OpenOPC.opcda, 'win32com_found', False)
     opc = OpenOPC.client()
     response = opc.info()
     assert(response == None)
 
 def test_nonwindowsos_ping(mocker):
-    mocker.patch('OpenOPCDA.win32_check',  return_value=False)
+    mocker.patch.object(OpenOPC.opcda, 'win32com_found', False)
     opc = OpenOPC.client()
     response = opc.ping()
     assert(response == None)
 
 def test_nonwindowsos_get_error_str(mocker):
-    mocker.patch('OpenOPCDA.win32_check',  return_value=False)
+    mocker.patch.object(OpenOPC.opcda, 'win32com_found', False)
     opc = OpenOPC.client()
     response = opc._get_error_str(err='dummy')
     assert(response == None)
 
 def test_nonwindowsos_update_tx_time(mocker):
-    mocker.patch('OpenOPCDA.win32_check',  return_value=False)
+    mocker.patch.object(OpenOPC.opcda, 'win32com_found', False)
     opc = OpenOPC.client()
     response = opc._update_tx_time()
     assert(response == False)
@@ -335,7 +336,8 @@ def test_properties():
     assert(props[0][0] == 'Channel_1.Device_1.Bool_1')
 
 def test_badtagproperties():
-    with pytest.raises( (TypeError, OPCError) ) as exc_info:
+#    opcException = BaseException("test_badtagproperties")
+    with pytest.raises( (TypeError, BaseException) ) as exc_info:
         taglistkep = ['Channel1.Device_1.Bool_1', 'Channel1.Device_1.Tag_1']
         props = pytest.opcClient.properties(taglistkep)
     assert("properties: -1073479672" in str(exc_info.value)) # error 0xC0040008: The item ID is not syntactically valid

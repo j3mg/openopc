@@ -1,4 +1,22 @@
+###########################################################################
+#
+# OpenOPC for Python OPC-DA Library File
+#
+# General functions file.
+#
+# Copyright (c) 2007-2012 Barry Barnreiter (barry_b@users.sourceforge.net)
+# Copyright (c) 2014 Anton D. Kachalov (mouse@yandex.ru)
+# Copyright (c) 2017 José A. Maita (jose.a.maita@gmail.com)
+# Copyright (c) 2022 j3mg
+#
+###########################################################################
 import os
+
+try:
+    import pythoncom # Only used by get_error_str on Python 32-bit systems
+except:
+    pass
+
 
 # OPC Constants
 ACCESS_RIGHTS = (0, 'Read', 'Write', 'Read/Write')
@@ -42,6 +60,8 @@ def get_error_str(error, _opc=None):
                 opc_err_str = unicode(_opc.GetErrorString(scode)).strip('\r\n')
             except:
                 opc_err_str = None
+        else:
+            opc_err_str = None
 
         try:
             com_err_str = unicode(pythoncom.GetScodeString(scode)).strip('\r\n')
@@ -105,6 +125,5 @@ class TimeoutError(Exception):
     def __init__(self, txt):
         Exception.__init__(self, txt)
 
-class OPCError(Exception):
-    def __init__(self, txt):
-        Exception.__init__(self, txt)
+def OPCError(msg):
+    return Exception("OPCError", msg) # Pyro5 cannot serialize custom exception types

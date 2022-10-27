@@ -1,8 +1,8 @@
 ###########################################################################
 #
-# OpenOPC for Python OPC-DA Tools Library Module
+# OpenOPC for Python OPC-DA Tools Library file
 #
-# A Windows only OPC-DA library module.
+# A Windows only OPC-DA library file.
 #
 # Copyright (c) 2007-2012 Barry Barnreiter (barry_b@users.sourceforge.net)
 # Copyright (c) 2014 Anton D. Kachalov (mouse@yandex.ru)
@@ -11,11 +11,12 @@
 #
 ###########################################################################
 import re
-import SystemHealth
+import OpenOPC
+import OpenOPC.systemhealth
 import pythoncom
 import pywintypes
 import time
-from Common import exceptional, get_error_str, quality_str, type_check, wild2regex, ACCESS_RIGHTS, BROWSER_TYPE, OPCError, OPC_QUALITY, OPC_STATUS
+from OpenOPC.common import exceptional, get_error_str, quality_str, type_check, wild2regex, ACCESS_RIGHTS, BROWSER_TYPE, OPCError, OPC_QUALITY, OPC_STATUS
 
 class ClientTools():
     def __init__(self, opc_class, opc_host):
@@ -285,7 +286,7 @@ class ClientTools():
 
             if mode == 'OpenOPC':
                 info_list += [('Gateway Host', '%s:%s' % (self.__open_host__, self.__open_port__))]
-                info_list += [('Gateway Version', '%s' % __version__)]
+                info_list += [('Gateway Version', '%s' % OpenOPC.__version__)]
             info_list += [('Class', self.opc_class)]
             info_list += [('Client Name', _opc.ClientName)]
             info_list += [('OPC Host', self.opc_host)]
@@ -313,6 +314,7 @@ class ClientTools():
     def ping(self, _opc):
         """Check if we are still talking to the OPC server"""
         try:
+            pythoncom.CoInitialize()
             # Convert OPC server time to milliseconds
             timestr = str(_opc.CurrentTime)
             hours = timestr[11:12]

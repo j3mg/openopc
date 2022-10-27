@@ -1,8 +1,8 @@
 ###########################################################################
 #
-# OpenOPC for Python OPC-DA IO Library Module
+# OpenOPC for Python OPC-DA IO Library file
 #
-# A Windows only OPC-DA library module.
+# A Windows only OPC-DA library file.
 #
 # Copyright (c) 2007-2012 Barry Barnreiter (barry_b@users.sourceforge.net)
 # Copyright (c) 2014 Anton D. Kachalov (mouse@yandex.ru)
@@ -11,7 +11,7 @@
 #
 ###########################################################################
 import re
-import SystemHealth
+import OpenOPC.systemhealth
 import win32com.client
 import win32com.server.util
 import win32event
@@ -19,7 +19,7 @@ import pythoncom
 import pywintypes
 import time
 from multiprocessing import Queue
-from Common import get_error_str, quality_str, type_check, tags2trace, TimeoutError, OPCError, SOURCE_CACHE, SOURCE_DEVICE, OPC_QUALITY
+from OpenOPC.common import get_error_str, quality_str, type_check, tags2trace, TimeoutError, OPCError, SOURCE_CACHE, SOURCE_DEVICE, OPC_QUALITY
 
 current_client = None
 
@@ -29,7 +29,6 @@ class GroupEvents:
 
     def OnDataChange(self, TransactionID, NumItems, ClientHandles, ItemValues, Qualities, TimeStamps):
         self.client.callback_queue.put((TransactionID, ClientHandles, ItemValues, Qualities, TimeStamps))
-
 
 class ClientIO():
     def __init__(self):
@@ -364,7 +363,7 @@ class ClientIO():
                         raise OPCError(error_msg)
 
         except pythoncom.com_error as err:
-            error_msg = 'read: %s' % self._get_error_str(err)
+            error_msg = 'read: %s' % get_error_str(err, _opc)
             raise OPCError(error_msg)
 
     def read(self, _opc, clientTools, tags=None, group=None, size=None, pause=0, source='hybrid', update=-1, timeout=5000, sync=False, include_error=False, rebuild=False):
@@ -399,17 +398,17 @@ class ClientIO():
         results = []
 
         for t in tags:
-            if   t == '@MemFree':      value = SystemHealth.mem_free()
-            elif t == '@MemUsed':      value = SystemHealth.mem_used()
-            elif t == '@MemTotal':     value = SystemHealth.mem_total()
-            elif t == '@MemPercent':   value = SystemHealth.mem_percent()
-            elif t == '@DiskFree':     value = SystemHealth.disk_free()
-            elif t == '@SineWave':     value = SystemHealth.sine_wave()
-            elif t == '@SawWave':      value = SystemHealth.saw_wave()
+            if   t == '@MemFree':      value = OpenOPC.systemhealth.mem_free()
+            elif t == '@MemUsed':      value = OpenOPC.systemhealth.mem_used()
+            elif t == '@MemTotal':     value = OpenOPC.systemhealth.mem_total()
+            elif t == '@MemPercent':   value = OpenOPC.systemhealth.mem_percent()
+            elif t == '@DiskFree':     value = OpenOPC.systemhealth.disk_free()
+            elif t == '@SineWave':     value = OpenOPC.systemhealth.sine_wave()
+            elif t == '@SawWave':      value = OpenOPC.systemhealth.saw_wave()
 
             elif t == '@CpuUsage':
                 if self.cpu == None:
-                    self.cpu = SystemHealth.CPU()
+                    self.cpu = OpenOPC.systemhealth.CPU()
                     time.sleep(0.1)
                 value = self.cpu.get_usage()
 
@@ -419,17 +418,17 @@ class ClientIO():
                 m = re.match('@TaskMem(((.*?)))', t)
                 if m:
                     image_name = m.group(1)
-                    value = SystemHealth.task_mem(image_name)
+                    value = OpenOPC.systemhealth.task_mem(image_name)
 
                 m = re.match('@TaskCpu(((.*?)))', t)
                 if m:
                     image_name = m.group(1)
-                    value = SystemHealth.task_cpu(image_name)
+                    value = OpenOPC.systemhealth.task_cpu(image_name)
 
                 m = re.match('@TaskExists(((.*?)))', t)
                 if m:
                     image_name = m.group(1)
-                    value = SystemHealth.task_exists(image_name)
+                    value = OpenOPC.systemhealth.task_exists(image_name)
 
             if value == None:
                 quality = 'Error'
@@ -593,7 +592,7 @@ class ClientIO():
                 opc_groups.Remove(opc_group.Name)
 
         except pythoncom.com_error as err:
-            error_msg = 'write: %s' % self._get_error_str(err)
+            error_msg = 'write: %s' % get_error_str(err, _opc)
             raise OPCError(error_msg)
 
     def write(self, _opc, clientTools, tag_value_pairs, size=None, pause=0, include_error=False):
@@ -642,7 +641,7 @@ class ClientIO():
                             if errors == None:
                                 groups_deleted = True
                         except pythoncom.com_error as err:
-                            error_msg = 'RemoveGroup: %s' % self._get_error_str(err)
+                            error_msg = 'RemoveGroup: %s' % get_error_str(err, _opc)
                             raise OPCError(error_msg)
 
                         del(self._group_tags[sub_group])
