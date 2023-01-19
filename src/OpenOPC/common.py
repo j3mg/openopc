@@ -121,9 +121,8 @@ def wild2regex(string):
    """Convert a Unix wildcard glob into a regular expression"""
    return string.replace('.','[.]').replace('*','.*').replace('?','.').replace('!','^')
 
-class TimeoutError(Exception):
-    def __init__(self, txt):
-        Exception.__init__(self, txt)
+def TimeoutError(msg):
+    return Exception("TimeoutError", msg)
 
 def OPCError(msg):
     return Exception("OPCError", msg) # Pyro5 cannot serialize custom exception types
