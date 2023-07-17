@@ -83,6 +83,7 @@ OPC DA Automation Wrappers
 A registered wrapper dll is required to access the OPC server. These wrappers are normally installed and registered when the OPC Server is installed.
 
 The default classes supported are::
+
     OPC DA Automation Wrapper 2.02
     Matrikon.OPC.Automation (opcdaauto.dll)
     Graybox.OPC.DAWrapper (gbda_aut.dll)
@@ -97,14 +98,16 @@ OpenOPC Console App Executables
 
 After an OpenOPC package has been installed in a Python environment, two console applications
 can be found in the scripts directory::
+
     opc.exe, the OpenOPC client
     opc-service.exe, the OpenOPC gateway service for Python 32 bit for Windows only
 
 To run opc-service from a virtual environment, the following dlls will have to be copied to scripts directory once pywin32 is installed::
+
     python3x.dll found in the main Python installation directory
     pythoncom3x.dll found in the virtual enviornment's Lib\site-packages\pywin32_system32
-	pywintypes3x.dll found in the virtual enviornment's Lib\site-packages\pywin32_system32
-	pythonservice.exe found in the virtual enviornment's Lib\site-packages\win32
+    pywintypes3x.dll found in the virtual enviornment's Lib\site-packages\pywin32_system32
+    pythonservice.exe found in the virtual enviornment's Lib\site-packages\win32
 	
 pywin32_system32 and win32 directories are created once pywin32 is installed.
 
@@ -113,11 +116,13 @@ OpenOPC Gateway Service
 -----------------------
 
 The gateway service can be installed, debugged, and removed by using the opc-service console app by executing the following on a Command Prompt with Administrative rights::
+
     opc-service install
     opc-service debug
     opc-service remove
 
 To display the usage help text execute the following on a Command Prompt::
+
     opc-service 
 
 Before installing the service on a machine, check that the OPC Server has a OPC Automation DLL installed.
