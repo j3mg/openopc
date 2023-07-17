@@ -1,7 +1,7 @@
 OpenOPC
 =======
 
-OpenOPC for Python 3.7+ is a descendent of http://openopc.sourceforge.net
+OpenOPC for Python 3.7+ is a descendent of https://openopc.sourceforge.net
 with modifications for Python 3 and distutils.
 
 
@@ -10,6 +10,15 @@ About OpenOPC
 OpenOPC for Python is a free, open source OPC (OLE for Process Control)
 toolkit designed for use with the popular Python programming language.
 
+Python Packages
+---------------
+
+Python package releases can be found at::
+    https://pypi.org/project/OpenOPC-DA
+for::
+    Windows 64-bit (does not include opc-service console application)
+    Windows 32-bit (needs pywin32 for opc-service)
+    Linux x86-64 (does not include opc-service console application)
 
 Software Developers
 -------------------
@@ -68,6 +77,52 @@ EXAMPLE - Minimal working program::
     print(opc['Square Waves.Real8'])
     opc.close()
 
+OPC DA Automation Wrappers
+--------------------------
+
+A registered wrapper dll is required to access the OPC server. These wrappers are normally installed and registered when the OPC Server is installed.
+
+The default classes supported are::
+    OPC DA Automation Wrapper 2.02
+    Matrikon.OPC.Automation (opcdaauto.dll)
+    Graybox.OPC.DAWrapper (gbda_aut.dll)
+    HSCOPC.Automation (PKS OPC Server dll)
+    RSI.OPCAutomation (rsiopcauto.dll from Rockwell)
+    OPC.Automation (opcdaauto.dll from OPC Foundation)
+
+These classes can be overrided by the OPC_CLASS environment variable.
+
+OpenOPC Console App Executables
+--------------------------------
+
+After an OpenOPC package has been installed in a Python environment, two console applications
+can be found in the scripts directory::
+    opc.exe, the OpenOPC client
+    opc-service.exe, the OpenOPC gateway service for Python 32 bit for Windows only
+
+To run opc-service from a virtual environment, the following dlls will have to be copied to scripts directory once pywin32 is installed::
+    python3x.dll found in the main Python installation directory
+    pythoncom3x.dll found in the virtual enviornment's Lib\site-packages\pywin32_system32
+	pywintypes3x.dll found in the virtual enviornment's Lib\site-packages\pywin32_system32
+	pythonservice.exe found in the virtual enviornment's Lib\site-packages\win32
+	
+pywin32_system32 and win32 directories are created once pywin32 is installed.
+
+
+OpenOPC Gateway Service
+-----------------------
+
+The gateway service can be installed, debugged, and removed by using the opc-service console app by executing the following on a Command Prompt with Administrative rights::
+    opc-service install
+    opc-service debug
+    opc-service remove
+
+To display the usage help text execute the following on a Command Prompt::
+    opc-service 
+
+Before installing the service on a machine, check that the OPC Server has a OPC Automation DLL installed.
+By default the service will use the loop back IP address 127.0.0.1, to allow the service to communicate over the network set
+OPC_GATE_HOST to the IP of the host before installing the service.
 
 OpenOPC Command-line Client
 ---------------------------
@@ -175,7 +230,7 @@ Command usage summary::
       -,       --pipe            Pipe item/value list from standard input
 
 If you experience any unexpected errors, please check the FAQ on
-http://openopc.sourceforge.net for additional help.
+https://openopc.sourceforge.net for additional help.
 
 If after reading through the FAQ you still require additional help,
 then the author of this package would be happy to assist you via
@@ -201,9 +256,9 @@ Credits
 Copyright (c) 2008-2012 by Barry Barnreiter (barry_b@users.sourceforge.net)
 Copyright (c) 2014 by Anton D. Kachalov (mouse@yandex.ru)
 Copyright (c) 2017 by Michal Kwiatkowski (michal@trivas.pl)
-Copyright (c) 2022 by j3mg
+Copyright (c) 2023 by j3mg
 
-http://openopc.sourceforge.net/
+https://openopc.sourceforge.net/
 https://github.com/ya-mouse/openopc
 https://github.com/sightmachine/OpenOPC
 https://github.com/mkwiatkowski/OpenOPC
