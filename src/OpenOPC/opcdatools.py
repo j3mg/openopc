@@ -8,6 +8,7 @@
 # Copyright (c) 2014 Anton D. Kachalov (mouse@yandex.ru)
 # Copyright (c) 2017 José A. Maita (jose.a.maita@gmail.com)
 # Copyright (c) 2022 j3mg
+# Copyright (c) 2025 Per Johnsson (perjohns@gmail.com) Resolved issue https://stackoverflow.com/questions/21300135/two-issue-about-python-openopc-library/79535814#79535814
 #
 ###########################################################################
 import re
@@ -220,30 +221,30 @@ class ClientTools():
                             # Leaf node, so append all remaining path parts together
                             # to form a single search expression
                             else:
-                                p = string.join(path_list[i:], '.')
+                                p = '.'.join(path_list[i:])
                                 pattern = re.compile('^%s$' % wild2regex(p) , re.IGNORECASE)
                                 break
 
                     browser.ShowBranches()
+                    node_types = ['Branch','Leaf']
 
                     if len(browser) == 0:
-                        browser.ShowLeafs(False)
-                        lowest_level = True
-                        node_type = 'Leaf'
-                    else:
-                        lowest_level = False
-                        node_type = 'Branch'
+                        node_types.pop(0)
 
-                    matches = filter(pattern.search, browser)
+                    for node_type in node_types:
+                        if node_type=='Leaf':
+                            browser.ShowLeafs(False)
 
-                    if not lowest_level and recursive:
-                        queue += [path_str + x + path_postfix for x in matches]
-                    else:
-                        if lowest_level:  matches = [exceptional(browser.GetItemID,x)(x) for x in matches]
-                        if include_type:  matches = [(x, node_type) for x in matches]
-                        for node in matches:
-                            if not node in nodes: yield node
-                            nodes[node] = True
+                        matches = filter(pattern.search, browser)
+
+                        if node_type=='Branch' and recursive:
+                            queue += [path_str + x + path_postfix for x in matches]
+                        else:
+                            if node_type=='Leaf':  matches = [exceptional(browser.GetItemID,x)(x) for x in matches]
+                            if include_type:  matches = [(x, node_type) for x in matches]
+                            for node in matches:
+                                if not node in nodes: yield node
+                                nodes[node] = True
 
         except pythoncom.com_error as err:
             error_msg = 'list: %s' % get_error_str(err, _opc)
