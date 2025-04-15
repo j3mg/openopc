@@ -13,12 +13,18 @@ toolkit designed for use with the popular Python programming language.
 Python Packages
 ---------------
 
-Python package releases can be found at::
+Python package releases can be found at:
     https://pypi.org/project/OpenOPC-DA
-for::
-    Windows 64-bit (does not include opc-service console application)
-    Windows 32-bit (needs pywin32 for opc-service)
+for:
+    Windows Python 64-bit version (does not include opc-service console application)
+    Windows Python 32-bit version (needs pywin32 for opc-service)
     Linux x86-64 (does not include opc-service console application)
+	
+Installation
+------------
+
+From pypi:
+	pip install OpenOPC-DA
 
 Software Developers
 -------------------
@@ -97,12 +103,13 @@ OpenOPC Console App Executables
 --------------------------------
 
 After an OpenOPC package has been installed in a Python environment, two console applications
-can be found in the scripts directory::
+can be found in the scripts directory on Windows or bin directory on Linux::
 
     opc.exe, the OpenOPC client
-    opc-service.exe, the OpenOPC gateway service for Python 32 bit for Windows only
+    opc-service.exe, the OpenOPC gateway service for Python 32-bit for Windows only
 
-To run opc-service from a virtual environment, the following dlls will have to be copied to scripts directory once pywin32 is installed::
+
+To run opc-service from an active virtual environment, the following dlls will have to be copied to scripts directory once pywin32 is installed::
 
     python3x.dll found in the main Python installation directory
     pythoncom3x.dll found in the virtual enviornment's Lib\site-packages\pywin32_system32
@@ -112,8 +119,8 @@ To run opc-service from a virtual environment, the following dlls will have to b
 pywin32_system32 and win32 directories are created once pywin32 is installed.
 
 
-OpenOPC Gateway Service
------------------------
+OpenOPC Gateway Service (requires Python 32-bit for Windows)
+------------------------------------------------------------
 
 The gateway service can be installed, debugged, and removed by using the opc-service console app by executing the following on a Command Prompt with Administrative rights::
 
