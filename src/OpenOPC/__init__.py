@@ -16,7 +16,7 @@ import Pyro5.server
 from OpenOPC.common import OPC_CLASS, OPC_CLIENT, OPC_SERVER, OPCError, TimeoutError # Required for the OpenOPC Gateway service
 from OpenOPC.opcda import client as client
 
-__version__ = '1.5.0'
+__version__ = '1.5.1'
 
 def win32_check(): # can be mocked by pytest-mock
     return (os.name == 'nt')
